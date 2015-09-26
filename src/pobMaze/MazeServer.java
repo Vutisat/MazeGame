@@ -31,9 +31,8 @@ public class MazeServer {
 		if(maze == null){
 			readMaze();
 		}
-		System.out.println(Arrays.toString(getArea(2, 2)));
-		players = new HashMap<String, Player>();
 		
+		players = new HashMap<String, Player>();
 		if(players.containsKey(Username)){
 			if(players.get(Username).getPassword().equals(Password)){
 				return Username+"hahaha";
@@ -47,26 +46,91 @@ public class MazeServer {
 		
 	}
 	
-	public String close(String Username, String Password){
-		if(!players.containsKey(Username)) {
+	public String close(String sid, String Password){
+		if(sid.length()>6){
+		sid = sid.substring(0, sid.length()-6);
+		}
+		if(!players.containsKey(sid)) {
 			return "Player cannot be found";
 		}
 		
-		if(!players.get(Username).getPassword().equals(Password)) {
+		if(!players.get(sid).getPassword().equals(Password)) {
 			return "Password is incorrect";
 		}
 		
-		players.remove(Username);
+		players.remove(sid);
 		return "OK";
 	}
 	
 	
-	public void look(String sessionID){
+	public String look(String sid){
+		if(sid.length()>6){
+			sid = sid.substring(0, sid.length()-6);
+		}
 		
+		String value = "";
+		char[] temp = getArea(players.get(sid).getXlocation(), players.get(sid).getYlocation());
+		value = temp[0] + " " + temp[1] + " " + temp[2] + " " +temp[3];
+		System.out.println(value);
+		return null;
 	}
 	
-	public void move(String Username, char direction){
+	public String move(String sid, String direction){
+		if(sid.length()>6){
+			sid = sid.substring(0, sid.length()-6);
+		}
+		char[] area = getArea(players.get(sid).getXlocation(), players.get(sid).getYlocation());
+		String result = "";
 		
+		if(direction.equalsIgnoreCase("N")){
+			if(area[0] == 'X' || area[0] == 'P'){
+				result = "DIED";
+				players.get(sid).setXlocation(StartX);
+				players.get(sid).setYlocation(StartY);
+			}else if(area[0] == 'E'){
+				result = "DONE";
+			}else if(area[0] == ' '){
+				players.get(sid).setXlocation((players.get(sid).getXlocation()-1));
+				result = look(sid+"hahaha");
+			}
+		}else if(direction.equalsIgnoreCase("E")){
+			if(area[1] == 'X' || area[1] == 'P'){
+				result = "DIED";
+				players.get(sid).setXlocation(StartX);
+				players.get(sid).setYlocation(StartY);
+			}else if(area[1] == 'E'){
+				result = "DONE";
+			}else if(area[1] == ' '){
+				players.get(sid).setYlocation((players.get(sid).getYlocation()+1));
+				result = look(sid+"hahaha");
+			}
+		}else if(direction.equalsIgnoreCase("S")){
+			if(area[2] == 'X' || area[2] == 'P'){
+				result = "DIED";
+				players.get(sid).setXlocation(StartX);
+				players.get(sid).setYlocation(StartY);
+			}else if(area[2] == 'E'){
+				result = "DONE";
+			}else if(area[2] == ' '){
+				players.get(sid).setXlocation((players.get(sid).getXlocation()+1));
+				result = look(sid+"hahaha");
+			}
+		}else if(direction.equalsIgnoreCase("W")){
+			if(area[3] == 'X' || area[3] == 'P'){
+				result = "DIED";
+				players.get(sid).setXlocation(StartX);
+				players.get(sid).setYlocation(StartY);
+			}else if(area[3] == 'E'){
+				result = "DONE";
+			}else if(area[3] == ' '){
+				players.get(sid).setYlocation((players.get(sid).getYlocation()-1));
+				result = look(sid+"hahaha");
+			}
+		}else{
+			return "Invalid direction, please use 'N' 'E' 'S' or 'W'";
+		}
+		
+		return result;
 	}
 	
 	public void readMaze(){
@@ -110,10 +174,6 @@ public class MazeServer {
 		}
 	}
 	
-	public String getMaze(){
-		return null;
-	}
-	
 	public char[] getArea(int x, int y){
 		char[] temp = new char[4];
 		
@@ -142,5 +202,9 @@ public class MazeServer {
 			temp[3] = maze[y][x - 1];
 		
 		return temp;
+	}
+	
+	public String getMaze(){
+		return null;
 	}
 }
