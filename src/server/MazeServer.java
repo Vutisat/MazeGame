@@ -1,4 +1,4 @@
-package pobMaze;
+package server;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -91,6 +91,7 @@ public class MazeServer {
 				result = "DONE";
 			}else if(area[0] == ' '){
 				players.get(sid).setXlocation((players.get(sid).getXlocation()-1));
+				players.get(sid).setNumberOfMoves();
 				result = look(sid+"hahaha");
 			}
 		}else if(direction.equalsIgnoreCase("E")){
@@ -102,6 +103,7 @@ public class MazeServer {
 				result = "DONE";
 			}else if(area[1] == ' '){
 				players.get(sid).setYlocation((players.get(sid).getYlocation()+1));
+				players.get(sid).setNumberOfMoves();
 				result = look(sid+"hahaha");
 			}
 		}else if(direction.equalsIgnoreCase("S")){
@@ -113,6 +115,7 @@ public class MazeServer {
 				result = "DONE";
 			}else if(area[2] == ' '){
 				players.get(sid).setXlocation((players.get(sid).getXlocation()+1));
+				players.get(sid).setNumberOfMoves();
 				result = look(sid+"hahaha");
 			}
 		}else if(direction.equalsIgnoreCase("W")){
@@ -124,6 +127,7 @@ public class MazeServer {
 				result = "DONE";
 			}else if(area[3] == ' '){
 				players.get(sid).setYlocation((players.get(sid).getYlocation()-1));
+				players.get(sid).setNumberOfMoves();
 				result = look(sid+"hahaha");
 			}
 		}else{
@@ -205,6 +209,43 @@ public class MazeServer {
 	}
 	
 	public String getMaze(){
-		return null;
+		
+		StringBuilder result = new StringBuilder();
+		
+		result.append("<?xml version=1.0>\n");
+		result.append("<maze>\n");
+		for(String key : players.keySet()){
+			result.append("<user>\n");
+			
+			result.append("<name>");
+			result.append(players.get(key).getUsername());
+			result.append("</name>\n");
+			
+			result.append("<x>");
+			result.append(players.get(key).getXlocation());
+			result.append("</x>\n");
+			
+			result.append("<y>");
+			result.append(players.get(key).getYlocation());
+			result.append("</y>\n");
+			
+			result.append("<lastSeen>");
+			long timestamp = System.currentTimeMillis()/1000;
+			result.append(Long.toString(timestamp));
+			result.append("</lastSeen>\n");
+			
+			result.append("<moves>");
+			result.append(players.get(key).getNumberOfMoves());
+			result.append("</moves>\n");
+			
+			result.append("<state>");
+			result.append("Active");
+			result.append("</state>\n");
+			
+			result.append("</user>\n");
+		}
+		result.append("</maze>\n");
+		
+		return result.toString();
 	}
 }

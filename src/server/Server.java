@@ -1,4 +1,4 @@
-package pobMaze;
+package server;
 import org.apache.xmlrpc.*;
 import org.apache.xmlrpc.server.PropertyHandlerMapping;
 import org.apache.xmlrpc.server.XmlRpcServer;

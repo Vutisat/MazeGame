@@ -1,4 +1,4 @@
-package pobMaze;
+package server;
 
 public class Player {
 
@@ -6,17 +6,27 @@ public class Player {
 	private String password;
 	private int xlocation;
 	private int ylocation;
+	private int numberOfMoves;
 	
 	public Player(String username, String password, int x, int y){
 		this.username = username;
 		this.password = password;
 		this.xlocation = x;
 		this.ylocation = y;
+		this.numberOfMoves = 0;
 	}
 	public String getUsername() {
 		return username;
 	}
 
+	public int getNumberOfMoves() {
+		return numberOfMoves;
+	}
+	
+	public void setNumberOfMoves() {
+		this.numberOfMoves++;
+	}
+	
 	public void setUsername(String username) {
 		this.username = username;
 	}
@@ -45,9 +55,5 @@ public class Player {
 		this.ylocation = ylocation;
 	}
 
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
 
 }
