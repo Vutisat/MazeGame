@@ -16,7 +16,7 @@ public class MazeServer {
 	public int StartX;
 	public int StartY;
 	public static char[][] maze;
-	private HashMap<String, String> players;
+	private HashMap<String, Player> players;
 	
 	/**
 	 * @param args
@@ -31,21 +31,32 @@ public class MazeServer {
 		if(maze == null){
 			readMaze();
 		}
-		players = new HashMap<String, String>();
+		System.out.println(Arrays.toString(getArea(2, 2)));
+		players = new HashMap<String, Player>();
 		
 		if(players.containsKey(Username)){
-			if(players.get(Username).equals(Password)){
+			if(players.get(Username).getPassword().equals(Password)){
 				return Username+"hahaha";
 			}else{
 				return "Username and password does not match.";
 			}
 		}
 		
-		return Password;
+		players.put(Username, new Player(Username, Password, StartX, StartY));
+		return "user has been created";
 		
 	}
 	
 	public String close(String Username, String Password){
+		if(!players.containsKey(Username)) {
+			return "Player cannot be found";
+		}
+		
+		if(!players.get(Username).getPassword().equals(Password)) {
+			return "Password is incorrect";
+		}
+		
+		players.remove(Username);
 		return "OK";
 	}
 	
@@ -101,5 +112,35 @@ public class MazeServer {
 	
 	public String getMaze(){
 		return null;
+	}
+	
+	public char[] getArea(int x, int y){
+		char[] temp = new char[4];
+		
+		//north
+		if(y - 1 < 0)
+			temp[0] = 'X';
+		else
+			temp[0] = maze[y - 1][x];
+		
+		//east
+		if(x + 1 > width - 1)
+			temp[1] = 'X';
+		else 
+			temp[1] = maze[y][x + 1];
+		
+		//south
+		if(y + 1  > height - 1)
+			temp[2] = 'X';
+		else
+			temp[2] = maze[y + 1][x];
+		
+		//west
+		if(x - 1 < 0)
+			temp[3] = 'X';
+		else 
+			temp[3] = maze[y][x - 1];
+		
+		return temp;
 	}
 }
